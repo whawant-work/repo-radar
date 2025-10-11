@@ -7,6 +7,12 @@ Daily digest of your GitHub universe — PRs, issues, and reviews.
 
 ---
 
+## Documentation
+
+- Requirements: see docs/requirements.md
+- Architecture: see docs/architecture.md
+
+
 ## License
 
 Licensed under the **WHATWANT BEERWARE LICENSE v1.0** 🍺  
