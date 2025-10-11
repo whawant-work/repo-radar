@@ -3,5 +3,6 @@ name = "repo-radar"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
+license = {text = "THE WHATWANT BEERWARE LICENSE (Version 1.0)"}
 requires-python = ">=3.12"
 dependencies = []
