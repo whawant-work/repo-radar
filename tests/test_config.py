@@ -11,13 +11,11 @@ from repo_radar import LoadOptions, RepoRadarConfigError, load_config
 def test_env_only(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("TIMEZONE", "Asia/Seoul")
     monkeypatch.setenv("DAILY_AT", "08:30")
-    monkeypatch.setenv("REPOS", "octocat/Hello-World,owner/repo")
     monkeypatch.setenv("EMAIL_TO", "a@x.com,b@y.com")
     monkeypatch.setenv("EMAIL_FROM", "noreply@x.com")
     cfg = load_config()
     assert cfg.timezone == "Asia/Seoul"
     assert cfg.daily_at == "08:30"
-    assert cfg.repos == ["octocat/Hello-World", "owner/repo"]
     assert cfg.email.email_to == ["a@x.com", "b@y.com"]
 
 
@@ -28,10 +26,13 @@ def test_invalid_daily_at_raises(monkeypatch: pytest.MonkeyPatch, bad_time: str)
         load_config()
 
 
-def test_invalid_repo_format_raises(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setenv("REPOS", "badformat")
+def test_invalid_repo_format_raises() -> None:
+    # validation still applies when providing programmatically
+    from repo_radar.config import Config, _validate
+
+    cfg = Config(repos=["badformat"])
     with pytest.raises(RepoRadarConfigError):
-        load_config()
+        _validate(cfg)
 
 
 def test_email_from_required_when_to(monkeypatch: pytest.MonkeyPatch) -> None:

@@ -112,9 +112,6 @@ def _from_env() -> dict[str, Any]:
         out["timezone"] = tz
     if da := _env("DAILY_AT"):
         out["daily_at"] = da
-    repos_env = _env("REPOS")
-    if repos_env:
-        out["repos"] = _split_csv(repos_env)
     if rf := _env("RULES_FILE"):
         out["rules_file"] = rf
     # quiet hours as HH:MM-HH:MM
@@ -183,7 +180,7 @@ def _validate(cfg: Config) -> None:
         if not (_TIME_RE.fullmatch(s) and _TIME_RE.fullmatch(e)):
             raise RepoRadarConfigError("QUIET_HOURS must be 'HH:MM-HH:MM'")
 
-    # repos
+    # repos (no longer loaded from env; keep validation only when provided programmatically)
     for r in cfg.repos:
         if not _is_owner_repo(r):
             raise RepoRadarConfigError(f"Invalid repo '{r}', expected 'owner/name'")
@@ -251,7 +248,7 @@ def load_config(options: LoadOptions | None = None) -> Config:
     cfg = Config(
         timezone=env_data.get("timezone", Config.timezone),
         daily_at=env_data.get("daily_at", Config.daily_at),
-        repos=list(env_data.get("repos", []) or []),
+        repos=[],
         rules_file=env_data.get("rules_file"),
         quiet_hours=tuple(env_data.get("quiet_hours")) if env_data.get("quiet_hours") else None,  # type: ignore[arg-type]
         github=GithubAuth(**env_data.get("github", {})),

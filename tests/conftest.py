@@ -18,7 +18,6 @@ def _clear_env(monkeypatch: pytest.MonkeyPatch) -> None:
     base_keys = [
         "TIMEZONE",
         "DAILY_AT",
-        "REPOS",
         "RULES_FILE",
         "QUIET_HOURS",
         "GITHUB_TOKEN",

@@ -84,8 +84,8 @@
 - Quiet hours/주말 스킵 옵션.
 
 5.9 설정 관리
-- 환경 변수와 .env 파일 기반 설정만 지원(2025-10 기준). config.yaml/json 등 파일 기반 설정은 향후 지원 예정.
-- 주요 키: TIMEZONE, DAILY_AT, REPOS[], EMAIL_SMTP_*, EMAIL_TO[], GITHUB_TOKEN
+- 환경 변수와 .env 파일 기반 설정을 지원(2025-10 기준). 저장소 목록은 파일 기반 레지스트리(`config/repos.list`)로 관리한다.
+- 주요 키: TIMEZONE, DAILY_AT, EMAIL_SMTP_*, EMAIL_TO[], GITHUB_TOKEN
 # (아래 항목들은 향후 지원 예정)
 # - RULES, GH_PAGES_REPO/BRANCH, BASE_URL
 
@@ -122,13 +122,13 @@
 GITHUB_TOKEN=ghp_xxxxx
 TIMEZONE=Asia/Seoul
 DAILY_AT=09:00
-REPOS=owner1/repoA,owner2/repoB
 EMAIL_SMTP_HOST=smtp.example.com
 EMAIL_SMTP_PORT=587
 EMAIL_SMTP_USER=youruser
 EMAIL_SMTP_PASS=yourpass
 EMAIL_FROM=noreply@example.com
 EMAIL_TO=me@example.com,team@example.com
+# 저장소 목록은 환경변수 대신 파일로 관리: config/repos.list (한 줄당 owner/name)
 # (아래 항목들은 향후 지원 예정)
 # GH_PAGES_REPO=you/repo-radar-pages
 # GH_PAGES_BRANCH=gh-pages

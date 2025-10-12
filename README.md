@@ -31,9 +31,8 @@ PR, 이슈, 리뷰 등을 자동으로 수집하고 분류해서 HTML 다이제�
 ```bash
 # .env 파일로 설정 (권장)
 cp .env.sample .env
-# 또는 환경변수로 직접 설정
+# 또는 환경변수로 직접 설정 (일부 설정)
 export TIMEZONE=Asia/Seoul
-export REPOS=owner1/repo1,owner2/repo2
 export GITHUB_TOKEN=your_github_token
 ```
 
@@ -46,6 +45,24 @@ uv run python main.py
 uv run python main.py --generate
 ```
 
+### 3. 저장소 목록 파일로 관리하기 (권장)
+`config/repos.list` 파일로 저장소 목록을 관리합니다. 저장소 목록은 환경변수 대신 파일로 관리합니다.
+
+- 한 줄에 하나씩 `owner/repo` 형식으로 입력
+- 빈 줄과 `#`로 시작하는 주석 줄은 무시
+- 끝에 공백 후 `#`로 시작하는 인라인 주석 허용: `owner/repo  # 메모`
+
+시작하려면 샘플을 복사하세요:
+
+```bash
+cp config/repos.sample.list config/repos.list
+# 그런 다음 config/repos.list 파일을 편집하세요
+```
+
+프로그램 통합은 추후 CLI 서브커맨드로 제공될 예정입니다. 현재는 `repo_radar.registry` 모듈의 `load_repos`, `validate_repos` 함수를 직접 사용할 수 있습니다.
+
+> 참고: `config/repos.list`는 개인 환경에 따라 달라지는 사용자 관리 파일이므로 git에 커밋되지 않도록 `.gitignore`에 포함되어 있습니다. 저장소에는 샘플(`config/repos.sample.list`)만 포함됩니다.
+
 ## ⚙️ 상세 설정
 
 ### 설정 우선순위
@@ -55,7 +72,6 @@ uv run python main.py --generate
 
 | 키 | 설명 | 예시 | 필수 여부 |
 |---|---|---|:---:|
-| `REPOS` | 모니터링할 저장소 목록 (쉼표구분) | `owner1/repo1,owner2/repo2` | ✅ |
 | `GITHUB_TOKEN` | GitHub Personal Access Token | `ghp_xxxxx` | ✅ |
 
 ### 선택 설정
@@ -80,7 +96,6 @@ uv run python main.py --generate
 ### .env 파일 예시
 ```dotenv
 # 필수 설정
-REPOS=microsoft/vscode,python/cpython
 GITHUB_TOKEN=ghp_your_token_here
 
 # 선택 설정
@@ -109,7 +124,7 @@ EMAIL_TO=me@example.com,team@example.com
 **⚠️ 주의사항**:
 - GitHub 토큰은 `repo` 권한이 필요합니다
 - `EMAIL_TO` 설정 시 `EMAIL_FROM`도 반드시 설정해야 합니다
-- `REPOS`는 반드시 `owner/name` 형식으로 입력하세요
+- 저장소 목록은 `config/repos.list` 파일로 관리하세요 (`owner/name` 형식)
 
 > ⚙️ 전체 설정 옵션과 상세한 환경 변수 목록은 [요구사항 문서](docs/requirements.md#10-구성환경-변수예시)를 참고하세요.
 

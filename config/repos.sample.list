@@ -1,0 +1,5 @@
+# repo 목록 샘플
+# 한 줄에 owner/repo 형식으로 입력하세요.
+whatwant/repo-radar
+octocat/Hello-World
+# myorg/private-repo  # 비공개 repo는 토큰 필요
