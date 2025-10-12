@@ -1,7 +1,7 @@
 # repo-radar 아키텍처 설계 (v0.1 초안)
 
-문서 버전: 0.1  
-작성일: 2025-10-12  
+문서 버전: 0.1
+작성일: 2025-10-12
 대상: 요구사항 문서(`docs/requirements.md`) 기준 MVP~v0.3 범위
 
 ## 아키텍처 패턴 및 적용 이유
@@ -212,10 +212,9 @@ erDiagram
   - 시스템 cron + 환경변수/시크릿 주입 -> SMTP/Pages 푸시
   - 장점: 커스텀 가능, Private 네트워크에서 실행 가능
 
-## 실패/재시도·레이트리밋 전략
-- 네트워크/API 오류: 지수 백오프(예: 1s, 2s, 4s, 8s, 최대 5회), idempotent 설계
-- GitHub Rate limit: 남은 쿼터/리셋 시간 확인, 요청 배치/필드 선택, ETag/If-None-Match 적극 활용
-- 부분 실패 허용: 일부 리포 실패 시 나머지 진행, 알림에는 [PARTIAL] 표시
+
+## 실패/재시도·레이트리밋 및 리스크 대응
+실패/재시도, 레이트리밋, 보안 등 기술적 리스크 및 대응 방안은 [docs/risks-and-mitigations.md](./risks-and-mitigations.md) 문서를 참고하세요.
 
 ## 보안/프라이버시
 - 비밀값은 환경변수/시크릿 스토어에만 저장(GITHUB_TOKEN, SMTP 자격)

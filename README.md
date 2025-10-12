@@ -39,11 +39,23 @@ Daily digest of your GitHub universe — PRs, issues, and reviews.
 
 ---
 
+## 🧹 코딩 스타일 요약
+
+이 저장소는 Ruff(포맷+린트)와 pre-commit 훅, GitHub Actions CI로 일관된 스타일을 유지합니다.
+
+- 라인 길이 100, Python 3.12 타깃
+- 네이밍은 PEP 8(pep8-naming) 준수: 클래스 PascalCase, 함수/변수 snake_case, 상수 UPPER_SNAKE_CASE
+- 상세 규칙과 사용법: docs/style-guide.md 참고
+
+---
+
+
 ## Documentation
 
 - [Requirements](docs/requirements.md)
 - [Architecture](docs/architecture.md)
 - [Coding style & naming](docs/style-guide.md)
+- [Risks & Mitigations](docs/risks-and-mitigations.md)
 
 
 ## License
@@ -52,13 +64,3 @@ Licensed under the **WHATWANT BEERWARE LICENSE v1.0** 🍺
 If you like this project, buy me a beer (or coffee) someday ☕
 
 See the [LICENSE](./LICENSE) file for details.
-
----
-
-## 🧹 코딩 스타일 요약
-
-이 저장소는 Ruff(포맷+린트)와 pre-commit 훅, GitHub Actions CI로 일관된 스타일을 유지합니다.
-
-- 라인 길이 100, Python 3.12 타깃
-- 네이밍은 PEP 8(pep8-naming) 준수: 클래스 PascalCase, 함수/변수 snake_case, 상수 UPPER_SNAKE_CASE
-- 상세 규칙과 사용법: docs/style-guide.md 참고
