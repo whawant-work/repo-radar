@@ -119,7 +119,7 @@ def _from_env() -> dict[str, Any]:
         out["rules_file"] = rf
     # quiet hours as HH:MM-HH:MM
     if (qh := _env("QUIET_HOURS")) and "-" in qh:
-        s, e = [x.strip() for x in qh.split("-", 1)]
+        s, e = (x.strip() for x in qh.split("-", 1))
         out["quiet_hours"] = (s, e)
 
     # github
@@ -212,7 +212,8 @@ def load_config(options: LoadOptions | None = None) -> Config:
     - ✅ Override control for .env vs OS environment variables
 
     Args:
-        options: LoadOptions with .env loading preferences (load_dotenv, dotenv_path, dotenv_override)
+        options: LoadOptions with .env loading preferences (load_dotenv, dotenv_path,
+                dotenv_override)
 
     Returns:
         Config: Validated configuration object with masked secrets in redacted output
