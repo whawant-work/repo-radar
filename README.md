@@ -10,10 +10,43 @@ Daily digest of your GitHub universe — PRs, issues, and reviews.
 
 ---
 
+## 🚀 개발 시작하기
+
+### Prerequisites
+- [uv](https://docs.astral.sh/uv/) - Python 패키지 매니저
+- Python 3.12+ (uv가 자동으로 관리)
+
+### 설치 및 설정
+
+```bash
+# 1. 저장소 클론
+git clone https://github.com/whawant-work/repo-radar.git
+cd repo-radar
+
+# 2. 의존성 설치 (Python 환경 자동 생성)
+uv sync
+
+# 3. 코드 품질 검사
+uv run ruff check      # 린팅
+uv run ruff format     # 포맷팅
+
+# 4. 테스트 실행
+uv run pytest
+
+# 5. 애플리케이션 실행
+uv run python main.py
+```
+
+### 개발 도구
+- **린팅/포맷팅**: Ruff (Black + flake8 + isort 대체)
+- **테스트**: pytest
+- **의존성 관리**: uv (pip + virtualenv 대체)
+
+---
 
 ## 🛠️ 기술 스택 제안
 
-- **언어:** Python 3.10 이상
+- **언어:** Python 3.12 이상
 	- 표준 라이브러리 활용 극대화(HTTP, 일정, 파일 등)
 - **API 연동:**
 	- GitHub API: `requests` (필수 최소 외부 패키지)
