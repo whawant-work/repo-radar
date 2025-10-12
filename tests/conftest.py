@@ -14,7 +14,8 @@ if str(ROOT) not in sys.path:
 @pytest.fixture(autouse=True)
 def _clear_env(monkeypatch: pytest.MonkeyPatch) -> None:
     # Clear keys that may be populated by previous load_dotenv calls to avoid test leakage
-    keys = [
+    # Include both plain names and prefixed variants (REPORADAR_*, REPO_RADAR_*)
+    base_keys = [
         "TIMEZONE",
         "DAILY_AT",
         "REPOS",
@@ -32,5 +33,10 @@ def _clear_env(monkeypatch: pytest.MonkeyPatch) -> None:
         "GH_PAGES_BRANCH",
         "BASE_URL",
     ]
+
+    # Generate all variants: plain, REPORADAR_*, REPO_RADAR_*
+    keys = []
+    for key in base_keys:
+        keys.extend([key, f"REPORADAR_{key}", f"REPO_RADAR_{key}"])
     for k in keys:
         monkeypatch.delenv(k, raising=False)

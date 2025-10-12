@@ -154,9 +154,14 @@ EMAIL_TO=me@example.com,team@example.com
 - 부하: 대량 리포/항목 시나리오로 성능 확인.
 
 ## 13. 배포/운영
-- 옵션 A: GitHub Actions(크론 스케줄 + Pages 배포 + 메일 시크릿)
-- 옵션 B: 자체 서버/컨테이너(cron + 시스템 서비스)
-- 로그 보존, 시크릿 교체 주기, 토큰 만료 모니터링.
+**배포 옵션:**
+- **옵션 A**: GitHub Actions (크론 스케줄 + Pages 배포 + 메일 시크릿) - 권장
+- **옵션 B**: 자체 서버/컨테이너 (cron + 시스템 서비스)
+
+**운영 고려사항:**
+- 로그 보존, 시크릿 교체 주기, 토큰 만료 모니터링
+
+> 🏗️ 상세한 아키텍처 설계와 배포 전략은 [아키텍처 문서](./architecture.md)를 참고하세요.
 
 ## 14. 마일스톤
 - v0.1(MVP): REST 수집, 기본 규칙, HTML Digest, SMTP 메일, 수동 실행
@@ -165,11 +170,20 @@ EMAIL_TO=me@example.com,team@example.com
 - v1.0: 팀/조직 지원, UI 설정 페이지, 다국어
 
 
-## 15. 리스크/대응
-리스크 및 대응 방안은 [docs/risks-and-mitigations.md](./risks-and-mitigations.md) 문서를 참고하세요.
+## 15. 리스크 관리
+기술적 리스크 분석 및 상세한 대응 방안은 [리스크 관리 문서](./risks-and-mitigations.md)를 참고하세요.
 
 ## 16. 오픈 이슈(결정 사항)
 - GitHub App vs PAT 중 어떤 인증 방식 우선?
 - Digest 공개 범위: 전부 공개 vs 민감 항목 마스킹?
 - 이메일 프로바이더 선택(SMTP/SES/SendGrid)?
 - 팀/조직 단위 초기 지원 여부?
+
+---
+
+## 📚 관련 문서
+- [🏗️ 아키텍처 설계](./architecture.md) - 시스템 구조와 컴포넌트 설계
+- [⚠️ 리스크 관리](./risks-and-mitigations.md) - 기술적 리스크 분석 및 대응 방안
+- [✍️ 스타일 가이드](./style-guide.md) - 코딩 규칙과 개발 환경 설정
+
+```

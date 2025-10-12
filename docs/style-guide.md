@@ -47,7 +47,7 @@
 uv 사용 시:
 ```zsh
 # 1) 도구 설치(1회)
-uv tool install ruff==0.6.9
+uv tool install ruff>=0.8.0
 
 # 2) 전체 코드 점검
 ruff check .
@@ -62,7 +62,7 @@ ruff format .
 pip 사용 시:
 ```zsh
 python -m pip install --upgrade pip
-pip install ruff==0.6.9
+pip install ruff>=0.8.0
 ruff check .
 ruff check --fix .
 ruff format .
@@ -103,4 +103,11 @@ pre-commit install
 - 항목: `ruff check` + `ruff format --check`
 
 ---
-의견/변경 제안은 PR로 환영합니다. 🧭
+
+## 📚 관련 문서
+- [📋 요구사항 명세서](./requirements.md) - 프로젝트 전체 요구사항
+- [🏗️ 아키텍처 설계](./architecture.md) - 시스템 구조와 설계 원칙
+- [⚠️ 리스크 관리](./risks-and-mitigations.md) - 개발/운영 리스크 및 대응
+
+---
+*의견/변경 제안은 PR로 환영합니다.* 🧭

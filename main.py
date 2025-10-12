@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import argparse
 import json
+import sys
 
 from repo_radar import load_config
 
@@ -23,7 +25,23 @@ def main() -> None:
     - cp .env.sample .env  # Configure via .env file
     - export REPOS=owner/repo  # Configure via environment variables
     - uv run python main.py  # View current configuration
+    - uv run python main.py --generate  # Generate digest (future feature)
     """
+    parser = argparse.ArgumentParser(description="repo-radar GitHub digest tool")
+    parser.add_argument(
+        "--generate",
+        action="store_true",
+        help="Generate digest (not implemented yet - shows placeholder message)",
+    )
+    args = parser.parse_args()
+
+    if args.generate:
+        print("🚧 Digest generation is not yet implemented")
+        print("This feature will be available in future versions.")
+        print("For now, you can only view the current configuration.")
+        print("\nTo proceed with configuration check, run without --generate flag.")
+        sys.exit(1)
+
     cfg = load_config()
     redacted = cfg.redacted_dict()
 
