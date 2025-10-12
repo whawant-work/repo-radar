@@ -1,0 +1,21 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - name: Install tools
+        run: |
+          uv tool install ruff==0.6.9
+      - name: Lint & format check
+        run: |
+          ruff check --output-format=github .
+          ruff format --check .

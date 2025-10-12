@@ -2,6 +2,9 @@
 Daily digest of your GitHub universe — PRs, issues, and reviews.
 
 ![License: WHATWANT Beerware](https://img.shields.io/badge/License-WHATWANT--Beerware-yellow?logo=beer&labelColor=black)
+[![Ruff](https://img.shields.io/badge/code%20style-ruff-46aef7?logo=ruff&logoColor=white)](https://github.com/astral-sh/ruff)
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://pre-commit.com/)
+[![Python](https://img.shields.io/badge/python-3.12%2B-blue?logo=python&logoColor=white)](https://www.python.org/downloads/)
 
 > Freedom, creativity, and a good drink 🍺
 
@@ -10,41 +13,52 @@ Daily digest of your GitHub universe — PRs, issues, and reviews.
 
 ## 🛠️ 기술 스택 제안
 
-- **언어:** Python 3.10 이상  
+- **언어:** Python 3.10 이상
 	- 표준 라이브러리 활용 극대화(HTTP, 일정, 파일 등)
-- **API 연동:**  
+- **API 연동:**
 	- GitHub API: `requests` (필수 최소 외부 패키지)
-- **템플릿 렌더링:**  
+- **템플릿 렌더링:**
 	- Jinja2 (HTML Digest 생성, 대중적이고 유지보수 쉬움)
-- **이메일 발송:**  
-	- 표준 `smtplib` (SMTP), 필요시 `email` 패키지  
+- **이메일 발송:**
+	- 표준 `smtplib` (SMTP), 필요시 `email` 패키지
 	- 대량/고급 전송은 SendGrid/SES 연동(선택, 외부 패키지 최소화)
-- **스케줄링:**  
+- **스케줄링:**
 	- GitHub Actions(권장) 또는 Linux cron(추가 설치 불필요)
-- **데이터 저장:**  
+- **데이터 저장:**
 	- 파일(JSON/YAML) 또는 SQLite(표준 라이브러리 `sqlite3`)
-- **테스트:**  
+- **테스트:**
 	- `unittest` (표준), 필요시 `pytest`(선택)
-- **로깅/모니터링:**  
+- **로깅/모니터링:**
 	- 표준 `logging` 모듈
 
-**선정 기준:**  
-- Python 표준 라이브러리 우선, 필수 외부 패키지는 Jinja2, requests 정도로 최소화  
-- 대중적이고 문서/예제가 풍부한 기술  
-- GitHub Actions, cron 등 운영환경에 기본 내장된 스케줄러 활용  
+**선정 기준:**
+- Python 표준 라이브러리 우선, 필수 외부 패키지는 Jinja2, requests 정도로 최소화
+- 대중적이고 문서/예제가 풍부한 기술
+- GitHub Actions, cron 등 운영환경에 기본 내장된 스케줄러 활용
 - 유지보수와 확장에 용이한 구조(레이어드/파이프라인/헥사고날 패턴 반영)
 
 ---
 
 ## Documentation
 
-- Requirements: see docs/requirements.md
-- Architecture: see docs/architecture.md
+- [Requirements](docs/requirements.md)
+- [Architecture](docs/architecture.md)
+- [Coding style & naming](docs/style-guide.md)
 
 
 ## License
 
-Licensed under the **WHATWANT BEERWARE LICENSE v1.0** 🍺  
-If you like this project, buy me a beer (or coffee) someday ☕  
+Licensed under the **WHATWANT BEERWARE LICENSE v1.0** 🍺
+If you like this project, buy me a beer (or coffee) someday ☕
 
 See the [LICENSE](./LICENSE) file for details.
+
+---
+
+## 🧹 코딩 스타일 요약
+
+이 저장소는 Ruff(포맷+린트)와 pre-commit 훅, GitHub Actions CI로 일관된 스타일을 유지합니다.
+
+- 라인 길이 100, Python 3.12 타깃
+- 네이밍은 PEP 8(pep8-naming) 준수: 클래스 PascalCase, 함수/변수 snake_case, 상수 UPPER_SNAKE_CASE
+- 상세 규칙과 사용법: docs/style-guide.md 참고

@@ -6,3 +6,40 @@ readme = "README.md"
 license = {text = "THE WHATWANT BEERWARE LICENSE (Version 1.0)"}
 requires-python = ">=3.12"
 dependencies = []
+
+[tool.ruff]
+# Formatting and linting tool (formatter replaces Black; linter replaces flake8/isort)
+line-length = 100
+target-version = "py312"
+extend-exclude = [
+	".venv",
+	".env",
+	"build",
+	"dist",
+]
+
+[tool.ruff.format]
+# Black-like formatting, normalized to double quotes
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"
+
+[tool.ruff.lint]
+# Rule sets: E/W (pycodestyle), F (pyflakes), I (isort),
+# B (bugbear), UP (pyupgrade), N (pep8-naming), A (builtins)
+select = ["E", "W", "F", "I", "B", "UP", "N", "A"]
+ignore = []
+
+[tool.ruff.lint.isort]
+known-first-party = ["repo_radar"]
+combine-as-imports = true
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401", "F403"]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
+
+[tool.ruff.lint.flake8-builtins]
+# Commonly-used identifiers allowed even if they shadow builtins (use sparingly)
+builtins-ignorelist = ["id", "type"]

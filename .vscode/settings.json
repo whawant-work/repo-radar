@@ -1,0 +1,11 @@
+{
+    "editor.formatOnSave": true,
+    "python.analysis.typeCheckingMode": "basic",
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true,
+    "ruff.enable": true,
+    "ruff.lint.run": "onSave",
+    "ruff.organizeImports": true,
+    "ruff.format.enable": true,
+    "python.formatting.provider": "none"
+}
