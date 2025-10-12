@@ -1,5 +1,57 @@
 # repo-radar
+
 Daily digest of your GitHub universe — PRs, issues, and reviews.
+
+## 🚀 빠른 시작
+
+### 1. 설정하기
+```bash
+# .env 파일로 설정 (권장)
+cp .env.sample .env
+# 또는 환경변수로 직접 설정
+export TIMEZONE=Asia/Seoul
+export REPOS=owner1/repo1,owner2/repo2
+```
+
+### 2. 실행하기
+```bash
+# 현재 설정 확인 (민감정보 마스킹)
+uv run python main.py
+
+# 테스트
+uv run pytest -q
+```
+
+## ⚙️ 설정 방법
+
+**우선순위**: 환경변수 > .env 파일 > 기본값
+
+### 주요 설정 키
+
+| 키 | 설명 | 예시 |
+|---|---|---|
+| `TIMEZONE` | 시간대 | `Asia/Seoul` |
+| `DAILY_AT` | 일일 실행 시각 (HH:MM) | `09:00` |
+| `REPOS` | 리포지토리 목록 (쉼표구분) | `owner1/repo1,owner2/repo2` |
+| `GITHUB_TOKEN` | GitHub PAT | `ghp_xxxxx` |
+| `EMAIL_FROM` | 발신자 이메일 | `noreply@example.com` |
+| `EMAIL_TO` | 수신자 이메일 (쉼표구분) | `me@example.com,team@example.com` |
+
+### .env 파일 예시
+```dotenv
+TIMEZONE=Asia/Seoul
+DAILY_AT=09:00
+REPOS=microsoft/vscode,python/cpython
+GITHUB_TOKEN=ghp_your_token_here
+EMAIL_FROM=noreply@example.com
+EMAIL_TO=me@example.com
+```
+
+**주의사항**:
+- `EMAIL_TO` 설정 시 `EMAIL_FROM`도 필수
+- `REPOS`는 `owner/name` 형식만 허용
+- 시간은 HH:MM (24시간) 형식
+
 
 ![License: WHATWANT Beerware](https://img.shields.io/badge/License-WHATWANT--Beerware-yellow?logo=beer&labelColor=black)
 [![Ruff](https://img.shields.io/badge/code%20style-ruff-46aef7?logo=ruff&logoColor=white)](https://github.com/astral-sh/ruff)

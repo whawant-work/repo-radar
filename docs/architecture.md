@@ -49,8 +49,8 @@ flowchart TD
         U2[Digest 웹 열람]
     end
 
-    subgraph Core[repo-radar Core]
-        CFG["Config Manager\n(env/config.yaml)"]
+  subgraph Core[repo-radar Core]
+    CFG["Config Manager\n(.env/env vars)"]
         REG["Repo Registry"]
         SCH["Scheduler\n(cron/Actions)"]
         COL["Collector\n(GitHub Client + Caching)"]
@@ -222,11 +222,12 @@ erDiagram
 - 감사 로그: 토큰 미출력, 오류 시에도 민감정보 마스킹
 
 ## 설정 키 맵핑(예시)
-- TIMEZONE, DAILY_AT, QUIET_HOURS
-- REPOS[], RULES_FILE, BASE_URL
-- GH_PAGES_REPO, GH_PAGES_BRANCH
+- TIMEZONE, DAILY_AT
+- REPOS[]
 - EMAIL_SMTP_* / 또는 EMAIL_PROVIDER=ses|sendgrid
 - GITHUB_TOKEN
+# (아래 항목들은 향후 지원 예정)
+# - QUIET_HOURS, RULES_FILE, BASE_URL, GH_PAGES_REPO, GH_PAGES_BRANCH
 
 ## 디렉토리 스켈레톤 제안
 코드 구조는 추후 구현 시 다음과 같이 모듈 분리를 권장합니다.
@@ -235,20 +236,21 @@ erDiagram
 repo-radar/
 ├─ main.py                # CLI 엔트리포인트
 ├─ repo_radar/
-│  ├─ config.py           # 설정 로딩/검증
-│  ├─ registry.py         # 리포 등록/관리
-│  ├─ github_client.py    # REST/GraphQL, rate limit, ETag
-│  ├─ collector.py        # 증분 수집 파이프라인
-│  ├─ rules.py            # 규칙 DSL/매칭
-│  ├─ digest.py           # KPI/섹션 집계
-│  ├─ renderer.py         # 템플릿 렌더링(HTML/JSON)
-│  ├─ publisher.py        # gh-pages 배포
-│  ├─ notifier.py         # 이메일 발송
-│  ├─ state.py            # 파일/SQLite 상태 저장
-│  └─ logging.py          # 구조적 로깅/메트릭
+│  ├─ config.py           # 설정 로딩/검증 (.env/환경변수 기반)
+# (아래 모듈/파일들은 향후 버전에서 추가 예정)
+# │  ├─ registry.py         # 리포 등록/관리
+# │  ├─ github_client.py    # REST/GraphQL, rate limit, ETag
+# │  ├─ collector.py        # 증분 수집 파이프라인
+# │  ├─ rules.py            # 규칙 DSL/매칭
+# │  ├─ digest.py           # KPI/섹션 집계
+# │  ├─ renderer.py         # 템플릿 렌더링(HTML/JSON)
+# │  ├─ publisher.py        # gh-pages 배포
+# │  ├─ notifier.py         # 이메일 발송
+# │  ├─ state.py            # 파일/SQLite 상태 저장
+# │  └─ logging.py          # 구조적 로깅/메트릭
 └─ templates/
-   ├─ base.html
-   └─ digest.html
+  ├─ base.html
+  └─ digest.html
 ```
 
 ## 향후 확장 포인트

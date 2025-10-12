@@ -84,8 +84,10 @@
 - Quiet hours/주말 스킵 옵션.
 
 5.9 설정 관리
-- 환경 변수와 설정 파일(config.yaml/json) 병행 지원.
-- 주요 키: TIMEZONE, DAILY_AT, REPOS[], RULES, EMAIL_SMTP_*, EMAIL_TO[], GH_PAGES_REPO/BRANCH, BASE_URL, GITHUB_TOKEN.
+- 환경 변수와 .env 파일 기반 설정만 지원(2025-10 기준). config.yaml/json 등 파일 기반 설정은 향후 지원 예정.
+- 주요 키: TIMEZONE, DAILY_AT, REPOS[], EMAIL_SMTP_*, EMAIL_TO[], GITHUB_TOKEN
+# (아래 항목들은 향후 지원 예정)
+# - RULES, GH_PAGES_REPO/BRANCH, BASE_URL
 
 5.10 관측성
 - 실행 로그(레벨: info/warn/error), 메트릭(수집 시간, 항목 수, 실패율).
@@ -117,15 +119,21 @@
 1) 스케줄 트리거 → 2) 리포지토리별 증분 수집 → 3) 규칙 적용/분류/우선순위 → 4) Digest 렌더링(HTML/JSON) → 5) gh-pages 커밋/푸시 → 6) 이메일 발송 → 7) 메트릭/로그 기록
 
 ## 10. 구성/환경 변수(예시)
-- GITHUB_TOKEN
-- TIMEZONE=Asia/Seoul
-- DAILY_AT=09:00
-- REPOS=owner1/repoA,owner2/repoB
-- GH_PAGES_REPO=you/repo-radar-pages
-- GH_PAGES_BRANCH=gh-pages
-- BASE_URL=https://you.github.io/repo-radar-pages
-- EMAIL_SMTP_HOST, EMAIL_SMTP_PORT, EMAIL_SMTP_USER, EMAIL_SMTP_PASS, EMAIL_FROM, EMAIL_TO
-- RULES_FILE=./config/rules.yaml
+GITHUB_TOKEN=ghp_xxxxx
+TIMEZONE=Asia/Seoul
+DAILY_AT=09:00
+REPOS=owner1/repoA,owner2/repoB
+EMAIL_SMTP_HOST=smtp.example.com
+EMAIL_SMTP_PORT=587
+EMAIL_SMTP_USER=youruser
+EMAIL_SMTP_PASS=yourpass
+EMAIL_FROM=noreply@example.com
+EMAIL_TO=me@example.com,team@example.com
+# (아래 항목들은 향후 지원 예정)
+# GH_PAGES_REPO=you/repo-radar-pages
+# GH_PAGES_BRANCH=gh-pages
+# BASE_URL=https://you.github.io/repo-radar-pages
+# RULES_FILE=./config/rules.yaml
 
 ## 11. 수용 기준(샘플)
 - 리포지토리 등록
