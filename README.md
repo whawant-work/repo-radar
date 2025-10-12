@@ -50,6 +50,28 @@ Daily digest of your GitHub universe — PRs, issues, and reviews.
 ---
 
 
+## 🎯 MVP 범위 (v0.1)
+
+### ✅ 포함사항
+- **데이터 수집**: GitHub REST API를 통한 PR/Issue 수집
+- **규칙 기반 분류**: 리뷰/답변/개발 카테고리 자동 분류
+- **HTML Digest 생성**: 정적 HTML 페이지 생성 (템플릿 기반)
+- **이메일 알림**: SMTP를 통한 요약 메일 발송
+- **수동 실행**: CLI 기반 명령어 실행
+
+### ❌ 제외사항 (후속 버전)
+- 자동 스케줄러 (v0.2)
+- GitHub Pages 자동 배포 (v0.2)
+- GraphQL 최적화 (v0.3)
+- 팀/조직 단위 대시보드 (v1.0)
+
+### 🎪 완료 기준
+- [ ] 최소 1개 공개 리포지토리에서 PR/Issue 수집 성공
+- [ ] 리뷰/답변/개발 카테고리로 항목 분류 완료
+- [ ] HTML Digest 파일 생성 확인
+- [ ] 테스트 이메일 수신 확인
+- [ ] 전체 파이프라인 E2E 테스트 통과
+
 ## Documentation
 
 - [Requirements](docs/requirements.md)
