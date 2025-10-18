@@ -2,11 +2,13 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 from pathlib import Path
 
 from repo_radar import load_config
 from repo_radar.github_client import GitHubAPIError, GitHubClient
+from repo_radar.logging import setup_logging
 from repo_radar.registry import RepoRegistryError, load_repos, validate_repos
 
 
@@ -29,6 +31,9 @@ def main() -> None:
     - uv run python main.py  # View current configuration
     - uv run python main.py --generate  # Generate digest (future feature)
     """
+    # Initialize logging early (default INFO). Users can override via env LOG_LEVEL.
+    setup_logging(level=os.environ.get("LOG_LEVEL", "INFO"))
+
     parser = argparse.ArgumentParser(description="repo-radar GitHub digest tool")
     parser.add_argument(
         "--generate",
