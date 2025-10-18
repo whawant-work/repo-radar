@@ -69,9 +69,7 @@ def test_collector_incremental_filters_by_updated_at(
     assert [x["id"] for x in result] == [2]
 
 
-def test_collector_persists_last_run(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_collector_persists_last_run(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     # Prepare registry file
     cfgdir = tmp_path / "config"
     cfgdir.mkdir()
@@ -85,6 +83,7 @@ def test_collector_persists_last_run(
         calls["n"] += 1
 
     import repo_radar.collector as colmod
+
     monkeypatch.setattr(colmod, "set_last_run", fake_set_last_run)
 
     client = DummyClient([])

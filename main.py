@@ -71,7 +71,6 @@ def main() -> None:
             print(json.dumps(minimal, indent=2, ensure_ascii=False))
             # Continue to config display below
 
-
     print("🔧 repo-radar Configuration")
     print("=" * 50)
     print(json.dumps(redacted, indent=2, ensure_ascii=False))
@@ -114,4 +113,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

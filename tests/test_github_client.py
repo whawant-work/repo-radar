@@ -95,7 +95,7 @@ def test_iter_json_list_paginates_with_link(monkeypatch: pytest.MonkeyPatch) -> 
                 json_data=[{"id": 1}, {"id": 2}],
                 headers={
                     "Content-Type": "application/json",
-                    "Link": "<https://api.github.com/foo?page=2>; rel=\"next\"",
+                    "Link": '<https://api.github.com/foo?page=2>; rel="next"',
                 },
             )
         if "page=2" in url:

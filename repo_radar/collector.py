@@ -4,6 +4,7 @@ repo-radar Collector 모듈
 - 페이로드 정규화 스키마
 - updatedAt 기반 증분 수집(최소)
 """
+
 from datetime import datetime
 from typing import Any
 
@@ -110,8 +111,10 @@ class Collector:
     @staticmethod
     def _is_updated_after(updated_at_iso: str, baseline_iso: str) -> bool:
         """Return True if updated_at_iso is strictly after baseline_iso."""
+
         # RFC3339 like '2025-10-12T05:00:00Z' or with timezone offset
         def parse(s: str) -> datetime:
             s = s.replace("Z", "+00:00")
             return datetime.fromisoformat(s)
+
         return parse(updated_at_iso) > parse(baseline_iso)
