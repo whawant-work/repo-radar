@@ -85,6 +85,7 @@ cp config/repos.sample.list config/repos.list
 | `DAILY_AT` | 일일 실행 시각 (HH:MM) | `09:00` | `18:30` |
 | `QUIET_HOURS` | 조용한 시간 (HH:MM-HH:MM) | - | `22:00-08:00` |
 | `RULES_FILE` | 규칙 파일 경로 | - | `./config/rules.yaml` |
+| `ME_LOGIN` | 규칙 엔진용 현재 사용자 로그인(선택) | - | `whatwant` |
 | `EMAIL_PROVIDER` | 이메일 제공자 | `smtp` | `smtp\|ses\|sendgrid` |
 | `EMAIL_SMTP_HOST` | SMTP 서버 호스트 | - | `smtp.gmail.com` |
 | `EMAIL_SMTP_PORT` | SMTP 포트 | `587` | `465` |
@@ -128,6 +129,27 @@ EMAIL_TO=me@example.com,team@example.com
 - GitHub 토큰은 `repo` 권한이 필요합니다
 - `EMAIL_TO` 설정 시 `EMAIL_FROM`도 반드시 설정해야 합니다
 - 저장소 목록은 `config/repos.list` 파일로 관리하세요 (`owner/name` 형식)
+
+### 인증(PAT) 설정 가이드
+
+repo-radar는 운영체제 환경변수와 `.env`를 모두 지원합니다. 우선순위는 환경변수 > .env > 기본값입니다.
+
+1) 환경변수로 설정(zsh)
+```zsh
+export GITHUB_TOKEN=ghp_your_token_here
+```
+
+2) .env 파일 사용(권장)
+- 루트의 `.env` 또는 `config/.env`를 자동 탐색하여 로드합니다.
+- 샘플: `.env.sample` 파일을 복사하여 사용하세요.
+```zsh
+cp .env.sample .env
+```
+
+3) GitHub Actions/CI 시크릿 사용 팁
+- GitHub Actions에서는 저장소 시크릿(예: `GH_PAT`)을 사용해 주입하세요.
+- 예: `env: GITHUB_TOKEN: ${{ secrets.GH_PAT }}` 또는 GitHub가 제공하는 `secrets.GITHUB_TOKEN` 대신 퍼미션 조정이 가능한 PAT를 권장(필요 권한에 맞춰 최소 권한 부여).
+- 토큰은 로그에서 자동 마스킹되며, 코드/Pages/로그에 노출되지 않도록 주의합니다.
 
 > ⚙️ 전체 설정 옵션과 상세한 환경 변수 목록은 [요구사항 문서](docs/requirements.md#10-구성환경-변수예시)를 참고하세요.
 

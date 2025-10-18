@@ -65,6 +65,13 @@ class GitHubClient:
     def get_repo(self, owner: str, repo: str) -> dict[str, Any]:
         return self._request_json("GET", f"/repos/{owner}/{repo}")
 
+    def get_current_user(self) -> dict[str, Any]:
+        """Return the current authenticated user object (GET /user).
+
+        Requires a token. On 401/403, GitHubAPIError is raised by _request_json.
+        """
+        return self._request_json("GET", "/user")
+
     # Core request -------------------------------------------------------
     def _build_headers(self, extra: Mapping[str, str] | None = None) -> dict[str, str]:
         headers: dict[str, str] = {

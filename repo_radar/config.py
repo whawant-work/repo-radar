@@ -85,6 +85,8 @@ class Config:
     repos: list[str] = field(default_factory=list)
     rules_file: str | None = None
     quiet_hours: tuple[str, str] | None = None  # (start, end) HH:MM
+    # Optional: explicit current user login for rules engine
+    me_login: str | None = None
 
     github: GithubAuth = field(default_factory=GithubAuth)
     email: EmailConfig = field(default_factory=EmailConfig)
@@ -114,6 +116,8 @@ def _from_env() -> dict[str, Any]:
         out["daily_at"] = da
     if rf := _env("RULES_FILE"):
         out["rules_file"] = rf
+    if ml := _env("ME_LOGIN"):
+        out["me_login"] = ml
     # quiet hours as HH:MM-HH:MM
     if (qh := _env("QUIET_HOURS")) and "-" in qh:
         s, e = (x.strip() for x in qh.split("-", 1))
@@ -251,6 +255,7 @@ def load_config(options: LoadOptions | None = None) -> Config:
         repos=[],
         rules_file=env_data.get("rules_file"),
         quiet_hours=tuple(env_data.get("quiet_hours")) if env_data.get("quiet_hours") else None,  # type: ignore[arg-type]
+        me_login=env_data.get("me_login"),
         github=GithubAuth(**env_data.get("github", {})),
         email=EmailConfig(**env_data.get("email", {})),
         pages=GhPagesConfig(**env_data.get("pages", {})),

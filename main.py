@@ -11,6 +11,9 @@ from repo_radar import __version__, load_config
 from repo_radar.github_client import GitHubAPIError, GitHubClient
 from repo_radar.logging import setup_logging
 from repo_radar.registry import RepoRegistryError, load_repos, validate_repos
+from repo_radar.collector import Collector
+from repo_radar.me_resolver import resolve_me
+from repo_radar.rules import RuleConfig, RuleEngine
 
 logger = logging.getLogger(__name__)
 
@@ -101,17 +104,40 @@ def cmd_run(args: argparse.Namespace) -> int:
     logger.info(f"Output directory: {args.output}")
     logger.info(f"Email enabled: {not args.no_email}")
 
-    print("🚧 Full pipeline execution is not yet implemented")
-    print("\nPlanned steps:")
-    print("  1. Collect PRs/Issues from GitHub (collector.py)")
-    print("  2. Classify items by rules (rules.py - not yet implemented)")
-    print("  3. Build digest with KPIs (digest.py - not yet implemented)")
-    print("  4. Render HTML/JSON output (renderer.py - not yet implemented)")
-    print("  5. Publish to GitHub Pages (publisher.py - not yet implemented)")
-    print("  6. Send email notification (notifier.py - not yet implemented)")
-    print("\nThis feature will be available in future versions.")
-    print("For now, you can use 'config' subcommand to check configuration.")
+    cfg = load_config()
+    client = GitHubClient(token=cfg.github.token)
 
+    # Resolve me
+    me = resolve_me(cli_me=args.me, env_me=cfg.me_login, github_client=client)
+    if me:
+        logger.info("Resolved current user: %s", me)
+    else:
+        logger.warning("Could not resolve current user; me-dependent rules may be disabled")
+
+    # Collect
+    registry_path = Path(args.repos)
+    coll = Collector(github_client=client)
+    try:
+        items = coll.collect(registry_path, persist_last_run=True)
+    except RepoRegistryError as exc:
+        print(f"\n❌ Failed to load registry: {exc}")
+        return 1
+    except GitHubAPIError as exc:
+        print(f"\n❌ GitHub collection failed: {exc}")
+        return 2
+
+    # Classify
+    engine = RuleEngine(RuleConfig(me=me))
+    buckets = engine.classify(items)
+
+    # For now, output a minimal JSON preview to stdout
+    summary = {k: [
+        {"id": it.get("id"), "type": it.get("type"), "repo": it.get("repo"), "number": it.get("number"), "title": it.get("title"), "priority": it.get("priority")}
+        for it in v
+    ] for k, v in buckets.items()}
+    print(json.dumps(summary, indent=2, ensure_ascii=False))
+
+    print("\nℹ️ Render/Publish/Notify steps are not yet implemented.")
     return 0
 
 
@@ -131,7 +157,7 @@ def cmd_render_only(args: argparse.Namespace) -> int:
     print("🚧 Render-only mode is not yet implemented")
     print("\nPlanned steps:")
     print("  1. Load existing collected data from state")
-    print("  2. Classify items by rules (rules.py - not yet implemented)")
+    print("  2. Classify items by rules (rules.py - module available; wiring pending)")
     print("  3. Build digest with KPIs (digest.py - not yet implemented)")
     print("  4. Render HTML/JSON output (renderer.py - not yet implemented)")
     print("  5. Optionally publish and notify")
@@ -228,6 +254,11 @@ def main() -> None:
         "--no-email",
         action="store_true",
         help="Skip email notification",
+    )
+    parser_run.add_argument(
+        "--me",
+        metavar="LOGIN",
+        help="Override current user login for rules (default: ME_LOGIN or /user)",
     )
     parser_run.set_defaults(func=cmd_run)
 
