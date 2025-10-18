@@ -1,0 +1,30 @@
+# repo-radar rules sample (future extension)
+# NOTE: This file is a placeholder to illustrate how RULES_FILE might look in v0.3.
+# Current version uses built-in defaults in code and a single env tuning key:
+#   DUE_SOON_WITHIN_DAYS: 3
+#
+# Planned keys (not yet parsed/applied):
+# - labels:
+#     review: ["review", "needs-review", "rfr", "r4r"]
+#     reply: ["question", "needs-reply", "needs-info", "awaiting-response"]
+#     develop: ["todo", "backlog", "urgent", "bug", "enhancement", "feature"]
+# - weights:
+#     label:
+#       urgent: 50
+#       high: 40
+#       bug: 30
+#       review: 20
+#       question: 10
+#     recent_hours: 24
+#     pr_bonus: 3
+#     due_soon_days: 3
+#     due_soon_weight: 25
+#
+# Example (future):
+# labels:
+#   review: ["needs-review", "review"]
+#   reply: ["needs-info", "question"]
+#   develop: ["urgent", "bug", "enhancement"]
+# weights:
+#   due_soon_days: 2
+#   due_soon_weight: 30

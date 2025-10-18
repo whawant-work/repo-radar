@@ -87,6 +87,8 @@ class Config:
     quiet_hours: tuple[str, str] | None = None  # (start, end) HH:MM
     # Optional: explicit current user login for rules engine
     me_login: str | None = None
+    # Rules tuning (basic): due-soon threshold in days
+    due_soon_within_days: int = 3
 
     github: GithubAuth = field(default_factory=GithubAuth)
     email: EmailConfig = field(default_factory=EmailConfig)
@@ -118,6 +120,11 @@ def _from_env() -> dict[str, Any]:
         out["rules_file"] = rf
     if ml := _env("ME_LOGIN"):
         out["me_login"] = ml
+    if dsd := _env("DUE_SOON_WITHIN_DAYS"):
+        try:
+            out["due_soon_within_days"] = int(dsd)
+        except ValueError as exc:
+            raise RepoRadarConfigError("DUE_SOON_WITHIN_DAYS must be an integer") from exc
     # quiet hours as HH:MM-HH:MM
     if (qh := _env("QUIET_HOURS")) and "-" in qh:
         s, e = (x.strip() for x in qh.split("-", 1))
@@ -256,6 +263,7 @@ def load_config(options: LoadOptions | None = None) -> Config:
         rules_file=env_data.get("rules_file"),
         quiet_hours=tuple(env_data.get("quiet_hours")) if env_data.get("quiet_hours") else None,  # type: ignore[arg-type]
         me_login=env_data.get("me_login"),
+        due_soon_within_days=env_data.get("due_soon_within_days", Config.due_soon_within_days),
         github=GithubAuth(**env_data.get("github", {})),
         email=EmailConfig(**env_data.get("email", {})),
         pages=GhPagesConfig(**env_data.get("pages", {})),

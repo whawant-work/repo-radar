@@ -85,6 +85,7 @@ cp config/repos.sample.list config/repos.list
 | `DAILY_AT` | 일일 실행 시각 (HH:MM) | `09:00` | `18:30` |
 | `QUIET_HOURS` | 조용한 시간 (HH:MM-HH:MM) | - | `22:00-08:00` |
 | `RULES_FILE` | 규칙 파일 경로 | - | `./config/rules.yaml` |
+| `DUE_SOON_WITHIN_DAYS` | 마감 임박 임계일(일) | `3` | `2` |
 | `ME_LOGIN` | 규칙 엔진용 현재 사용자 로그인(선택) | - | `whatwant` |
 | `EMAIL_PROVIDER` | 이메일 제공자 | `smtp` | `smtp\|ses\|sendgrid` |
 | `EMAIL_SMTP_HOST` | SMTP 서버 호스트 | - | `smtp.gmail.com` |
@@ -123,6 +124,8 @@ EMAIL_TO=me@example.com,team@example.com
 
 # 규칙 파일 (향후 지원)
 # RULES_FILE=./config/rules.yaml
+# 규칙 튜닝(현재 지원)
+# DUE_SOON_WITHIN_DAYS=3
 ```
 
 **⚠️ 주의사항**:

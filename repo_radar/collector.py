@@ -106,6 +106,8 @@ class Collector:
             "updatedAt": raw.get("updated_at"),
             "state": raw.get("state"),
             "reviewRequests": review_requests,
+            # Optional: milestone due date (ISO8601), used by rules for due-soon weighting
+            "dueOn": (raw.get("milestone") or {}).get("due_on"),
         }
 
     @staticmethod

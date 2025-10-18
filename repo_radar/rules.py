@@ -6,7 +6,8 @@ Rules Engine (basic)
 
 - 카테고리: "review" | "reply" | "develop"
 - 입력 아이템 스키마: repo_radar.collector.Collector._normalize_item 에서 생성된 dict
-  필수 키: id, type(PR|Issue), number, repo, title, labels[], assignees[], author, updatedAt, state, reviewRequests[]
+    필수 키: id, type(PR|Issue), number, repo, title, labels[], assignees[], author,
+    updatedAt, state, reviewRequests[]
 
 정책(기본값):
 - review: 나(me)가 reviewRequests에 포함되었거나, 라벨이 review 관련 키워드
@@ -21,10 +22,10 @@ Rules Engine (basic)
 
 from __future__ import annotations
 
+from collections.abc import Iterable
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
-from typing import Any, Iterable
-
+from typing import Any
 
 Category = str  # "review" | "reply" | "develop"
 
@@ -38,8 +39,15 @@ class RuleConfig:
     me: str | None = None  # 내 GitHub 로그인(선택)
     # 라벨 키워드(소문자 비교)
     review_labels: frozenset[str] = frozenset({"review", "needs-review", "rfr", "r4r"})
-    reply_labels: frozenset[str] = frozenset({"question", "needs-reply", "needs-info", "awaiting-response"})
-    develop_labels: frozenset[str] = frozenset({"todo", "backlog", "urgent", "bug", "enhancement", "feature"})
+    reply_labels: frozenset[str] = frozenset(
+        {"question", "needs-reply", "needs-info", "awaiting-response"}
+    )
+    develop_labels: frozenset[str] = frozenset(
+        {"todo", "backlog", "urgent", "bug", "enhancement", "feature"}
+    )
+    # 마감 임박 임계(D일 이내) 및 가중치
+    due_soon_within_days: int = 3
+    due_soon_weight: int = 25
 
 
 class RuleEngine:
@@ -68,8 +76,16 @@ class RuleEngine:
         if (me and me in assignees) and labels.intersection(self.cfg.reply_labels):
             candidates.append("reply")
 
-        # develop: 내가 담당이거나 개발 성격 라벨
-        if (me and me in assignees) or labels.intersection(self.cfg.develop_labels):
+        # develop: 내가 담당이거나 개발 성격 라벨, 또는 마감 임박(due soon)인 내 작업
+        if (
+            (me and me in assignees)
+            or labels.intersection(self.cfg.develop_labels)
+            or (
+                me
+                and me in assignees
+                and _is_due_soon(item.get("dueOn"), days=self.cfg.due_soon_within_days)
+            )
+        ):
             candidates.append("develop")
 
         # 우선순위 카테고리 선호도: review > reply > develop
@@ -127,6 +143,10 @@ class RuleEngine:
         if (item.get("type") or "").upper() == "PR":
             score += 3
 
+        # 마감 임박 보정: dueOn이 설정되어 있고 임계 이내면 가중치 부여
+        if _is_due_soon(item.get("dueOn"), days=self.cfg.due_soon_within_days):
+            score += self.cfg.due_soon_weight
+
         # 경계 보정
         if score < 0:
             score = 0
@@ -154,6 +174,26 @@ def _is_recent(updated_at: str | None, *, within_hours: int = 24) -> bool:
     if dt.tzinfo is None:
         dt = dt.replace(tzinfo=UTC)
     return now - dt <= timedelta(hours=within_hours)
+
+
+def _is_due_soon(due_on: str | None, *, days: int = 3) -> bool:
+    """Return True when due_on is within the next N days (inclusive).
+
+    - If due_on is in the past: still considered due/overdue -> True
+    - If due_on is None/unparseable: False
+    """
+    if not due_on:
+        return False
+    dt = _parse_iso8601(due_on)
+    if not dt:
+        return False
+    now = datetime.now(UTC)
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=UTC)
+    # Past due counts as urgent as well
+    if dt <= now:
+        return True
+    return dt - now <= timedelta(days=days)
 
 
 __all__ = [

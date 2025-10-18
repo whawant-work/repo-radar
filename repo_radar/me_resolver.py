@@ -1,17 +1,16 @@
 from __future__ import annotations
 
 import os
-from typing import Optional
 
 from .github_client import GitHubAPIError, GitHubClient
 
 
 def resolve_me(
     *,
-    cli_me: Optional[str] = None,
-    env_me: Optional[str] = None,
-    github_client: Optional[GitHubClient] = None,
-) -> Optional[str]:
+    cli_me: str | None = None,
+    env_me: str | None = None,
+    github_client: GitHubClient | None = None,
+) -> str | None:
     """Resolve current user login using a priority chain.
 
     Priority: CLI --me > env/config ME_LOGIN > GitHub /user > GITHUB_ACTOR > None

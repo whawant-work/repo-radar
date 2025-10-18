@@ -8,11 +8,11 @@ import sys
 from pathlib import Path
 
 from repo_radar import __version__, load_config
+from repo_radar.collector import Collector
 from repo_radar.github_client import GitHubAPIError, GitHubClient
 from repo_radar.logging import setup_logging
-from repo_radar.registry import RepoRegistryError, load_repos, validate_repos
-from repo_radar.collector import Collector
 from repo_radar.me_resolver import resolve_me
+from repo_radar.registry import RepoRegistryError, load_repos, validate_repos
 from repo_radar.rules import RuleConfig, RuleEngine
 
 logger = logging.getLogger(__name__)
@@ -127,14 +127,24 @@ def cmd_run(args: argparse.Namespace) -> int:
         return 2
 
     # Classify
-    engine = RuleEngine(RuleConfig(me=me))
+    engine = RuleEngine(RuleConfig(me=me, due_soon_within_days=cfg.due_soon_within_days))
     buckets = engine.classify(items)
 
     # For now, output a minimal JSON preview to stdout
-    summary = {k: [
-        {"id": it.get("id"), "type": it.get("type"), "repo": it.get("repo"), "number": it.get("number"), "title": it.get("title"), "priority": it.get("priority")}
-        for it in v
-    ] for k, v in buckets.items()}
+    summary = {
+        k: [
+            {
+                "id": it.get("id"),
+                "type": it.get("type"),
+                "repo": it.get("repo"),
+                "number": it.get("number"),
+                "title": it.get("title"),
+                "priority": it.get("priority"),
+            }
+            for it in v
+        ]
+        for k, v in buckets.items()
+    }
     print(json.dumps(summary, indent=2, ensure_ascii=False))
 
     print("\nℹ️ Render/Publish/Notify steps are not yet implemented.")

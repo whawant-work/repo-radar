@@ -115,3 +115,55 @@ def test_bucket_sorting_by_priority_desc() -> None:
     assert sum(len(v) for v in buckets.values()) == 2
     # ensure sorting: the urgent review should come first in its bucket
     assert buckets["review"][0]["id"] == 100
+
+
+def test_due_soon_weight_increases_priority_and_classifies_develop() -> None:
+    me = "kim"
+    engine = RuleEngine(RuleConfig(me=me, due_soon_within_days=3, due_soon_weight=25))
+    now = datetime.now(UTC)
+    # No labels, but assigned to me and due within 48 hours
+    item = {
+        "id": 200,
+        "type": "Issue",
+        "number": 5,
+        "repo": "o/r",
+        "title": "Implement task",
+        "labels": [],
+        "assignees": [me],
+        "author": "x",
+        "updatedAt": _iso(now - timedelta(days=5)),  # not recent
+        "state": "open",
+        "reviewRequests": [],
+        "dueOn": _iso(now + timedelta(hours=48)),
+    }
+
+    cat, prio = engine.classify_item(item)
+    assert cat == "develop"  # due soon + assigned to me → develop 포함
+    # label(0) + recent(0) + pr(0) + dueSoon(25) => >= 25
+    assert prio >= 25
+
+
+def test_overdue_counts_as_due_soon() -> None:
+    me = "lee"
+    engine = RuleEngine(RuleConfig(me=me, due_soon_within_days=3, due_soon_weight=25))
+    now = datetime.now(UTC)
+    item = {
+        "id": 201,
+        "type": "PR",
+        "number": 6,
+        "repo": "o/r",
+        "title": "Overdue fix",
+        "labels": ["enhancement"],
+        "assignees": [me],
+        "author": "y",
+        "updatedAt": _iso(now - timedelta(days=7)),
+        "state": "open",
+        "reviewRequests": [],
+        # overdue by 1 day
+        "dueOn": _iso(now - timedelta(days=1)),
+    }
+
+    cat, prio = engine.classify_item(item)
+    assert cat == "develop"
+    # enhancement(0) + not recent(0) + PR(+3) + dueSoon(+25) => >= 28
+    assert prio >= 28
