@@ -36,7 +36,6 @@ from __future__ import annotations
 from datetime import UTC, datetime
 from typing import Any
 
-
 CategoryBuckets = dict[str, list[dict[str, Any]]]
 
 
@@ -98,6 +97,7 @@ def build_sections(
     - digest 에서는 주요 필드만 노출(간결화)
     - max_items_per_section 설정 시 상위 N개로 제한
     """
+
     def trim(items: list[dict[str, Any]]) -> list[dict[str, Any]]:
         out: list[dict[str, Any]] = []
         for it in items:

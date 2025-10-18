@@ -64,7 +64,15 @@ def test_build_digest_schema_contains_kpis_and_sections() -> None:
     now = datetime.now(UTC)
     buckets = {
         "review": [
-            {"id": 1, "type": "PR", "repo": "o/r", "number": 1, "title": "A", "priority": 10, "updatedAt": _iso(now - timedelta(days=1))},
+            {
+                "id": 1,
+                "type": "PR",
+                "repo": "o/r",
+                "number": 1,
+                "title": "A",
+                "priority": 10,
+                "updatedAt": _iso(now - timedelta(days=1)),
+            },
         ],
         "reply": [],
         "develop": [],

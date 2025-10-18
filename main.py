@@ -9,12 +9,12 @@ from pathlib import Path
 
 from repo_radar import __version__, load_config
 from repo_radar.collector import Collector
+from repo_radar.digest import build_digest
 from repo_radar.github_client import GitHubAPIError, GitHubClient
 from repo_radar.logging import setup_logging
 from repo_radar.me_resolver import resolve_me
 from repo_radar.registry import RepoRegistryError, load_repos, validate_repos
 from repo_radar.rules import RuleConfig, RuleEngine
-from repo_radar.digest import build_digest
 
 logger = logging.getLogger(__name__)
 
