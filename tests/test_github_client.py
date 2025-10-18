@@ -75,4 +75,3 @@ def test_error_raises_github_api_error(monkeypatch: pytest.MonkeyPatch) -> None:
         client.get_repo("private", "repo")
     assert "403" in str(ei.value)
     assert "forbidden" in str(ei.value)
-
