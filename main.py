@@ -6,6 +6,7 @@ import sys
 from pathlib import Path
 
 from repo_radar import load_config
+from repo_radar.github_client import GitHubAPIError, GitHubClient
 from repo_radar.registry import RepoRegistryError, load_repos, validate_repos
 
 
@@ -34,6 +35,11 @@ def main() -> None:
         action="store_true",
         help="Generate digest (not implemented yet - shows placeholder message)",
     )
+    parser.add_argument(
+        "--check-github",
+        metavar="OWNER/REPO",
+        help="Quickly check GitHub API connectivity by fetching repo info",
+    )
     args = parser.parse_args()
 
     if args.generate:
@@ -45,6 +51,26 @@ def main() -> None:
 
     cfg = load_config()
     redacted = cfg.redacted_dict()
+
+    # Optional connectivity check to satisfy Issue #6 acceptance
+    if args.check_github:
+        if "/" not in args.check_github:
+            print("\n❌ Invalid format for --check-github. Use OWNER/REPO.")
+            sys.exit(2)
+        owner, repo = args.check_github.split("/", 1)
+        client = GitHubClient(token=cfg.github.token)
+        try:
+            info = client.get_repo(owner, repo)
+        except GitHubAPIError as exc:
+            print(f"\n❌ GitHub check failed: {exc}")
+            sys.exit(3)
+        else:
+            print("\n✅ GitHub connectivity OK")
+            # Show minimal fields to avoid noise
+            minimal = {k: info.get(k) for k in ("full_name", "private", "default_branch")}
+            print(json.dumps(minimal, indent=2, ensure_ascii=False))
+            # Continue to config display below
+
 
     print("🔧 repo-radar Configuration")
     print("=" * 50)
@@ -88,3 +114,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+

@@ -12,6 +12,7 @@ from .config import (
     RepoRadarConfigError,
     load_config,
 )
+from .github_client import GitHubAPIError, GitHubClient
 
 __all__ = [
     "Config",
@@ -21,4 +22,7 @@ __all__ = [
     "LoadOptions",
     "RepoRadarConfigError",
     "load_config",
+    "GitHubClient",
+    "GitHubAPIError",
 ]
+

@@ -43,6 +43,10 @@ uv run python main.py
 
 # 다이제스트 생성 (아직 미구현 - 향후 지원 예정)
 uv run python main.py --generate
+
+# GitHub API 연결 확인(이슈 #6)
+# 토큰이 설정되어 있다면 private 저장소도 확인됩니다
+uv run python main.py --check-github octocat/Hello-World
 ```
 
 ### 3. 저장소 목록 파일로 관리하기 (권장)
@@ -59,7 +63,7 @@ cp config/repos.sample.list config/repos.list
 # 그런 다음 config/repos.list 파일을 편집하세요
 ```
 
-프로그램 통합은 추후 CLI 서브커맨드로 제공될 예정입니다. 현재는 `repo_radar.registry` 모듈의 `load_repos`, `validate_repos` 함수를 직접 사용할 수 있습니다.
+프로그램 통합은 추후 CLI 서브커맨드로 제공될 예정입니다. 현재는 `repo_radar.registry` 모듈의 `load_repos`, `validate_repos` 함수와 GitHub REST 클라이언트(`repo_radar.github_client.GitHubClient`)를 직접 사용할 수 있습니다.
 
 > 참고: `config/repos.list`는 개인 환경에 따라 달라지는 사용자 관리 파일이므로 git에 커밋되지 않도록 `.gitignore`에 포함되어 있습니다. 저장소에는 샘플(`config/repos.sample.list`)만 포함됩니다.
 
