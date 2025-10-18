@@ -6,7 +6,7 @@ import os
 import sys
 from pathlib import Path
 
-from repo_radar import load_config
+from repo_radar import __version__, load_config
 from repo_radar.github_client import GitHubAPIError, GitHubClient
 from repo_radar.logging import setup_logging
 from repo_radar.registry import RepoRegistryError, load_repos, validate_repos
@@ -34,7 +34,15 @@ def main() -> None:
     # Initialize logging early (default INFO). Users can override via env LOG_LEVEL.
     setup_logging(level=os.environ.get("LOG_LEVEL", "INFO"))
 
-    parser = argparse.ArgumentParser(description="repo-radar GitHub digest tool")
+    parser = argparse.ArgumentParser(
+        description="repo-radar GitHub digest tool",
+        epilog=f"repo-radar version {__version__}",
+    )
+    parser.add_argument(
+        "--version",
+        action="version",
+        version=f"repo-radar {__version__}",
+    )
     parser.add_argument(
         "--generate",
         action="store_true",
@@ -76,7 +84,7 @@ def main() -> None:
             print(json.dumps(minimal, indent=2, ensure_ascii=False))
             # Continue to config display below
 
-    print("🔧 repo-radar Configuration")
+    print(f"🔧 repo-radar Configuration (v{__version__})")
     print("=" * 50)
     print(json.dumps(redacted, indent=2, ensure_ascii=False))
 

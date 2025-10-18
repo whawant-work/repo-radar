@@ -38,15 +38,14 @@ export GITHUB_TOKEN=your_github_token
 
 ### 2. 실행하기
 ```bash
-# 현재 설정 확인
+# 현재 설정 확인 및 저장소 목록 검증
 uv run python main.py
 
-# 다이제스트 생성 (아직 미구현 - 향후 지원 예정)
-uv run python main.py --generate
-
-# GitHub API 연결 확인(이슈 #6)
-# 토큰이 설정되어 있다면 private 저장소도 확인됩니다
+# GitHub API 연결 확인 (토큰이 설정되어 있다면 private 저장소도 확인됩니다)
 uv run python main.py --check-github octocat/Hello-World
+
+# 다이제스트 생성 (향후 지원 예정)
+# uv run python main.py --generate
 ```
 
 ### 3. 저장소 목록 파일로 관리하기 (권장)
@@ -175,13 +174,20 @@ repo-radar는 **Python 3.12+**를 기반으로 하며, 표준 라이브러리를
 
 **✅ 완료된 기능:**
 - 설정 관리 시스템 (환경변수/.env 파일 지원)
-- 타입 안전 설정 검증
-- 민감정보 마스킹
+- 타입 안전 설정 검증 및 민감정보 마스킹
+- GitHub REST API 클라이언트 (인증, 페이징, 재시도)
+- 저장소 레지스트리 (파일 기반 관리)
+- PR/Issue 수집기 (증분 수집, 상태 관리)
+- 구조적 로깅 시스템 (민감정보 자동 마스킹)
+- CLI 도구 (설정 확인, API 연결 테스트)
+- 유닛 테스트 (33개, 100% 통과)
 
-**🚧 진행 중:**
-- GitHub API 데이터 수집기
-- PR/이슈 분류 엔진
+**🚧 향후 구현 예정:**
+- 규칙 기반 분류 엔진 (리뷰/답변/개발)
 - HTML 다이제스트 생성기
+- SMTP 이메일 발송
+- 스케줄러 (크론/GitHub Actions)
+- GitHub Pages 자동 배포
 
 > 📅 전체 로드맵과 마일스톤 계획은 [요구사항 문서](docs/requirements.md#14-마일스톤)를 참고하세요.
 

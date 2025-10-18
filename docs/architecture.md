@@ -242,20 +242,20 @@ erDiagram
 
 ```
 repo-radar/
-├─ main.py                # CLI 엔트리포인트
+├─ main.py                # CLI 엔트리포인트 ✅
 ├─ repo_radar/
-│  ├─ config.py           # 설정 로딩/검증 (.env/환경변수 기반)
+│  ├─ config.py           # 설정 로딩/검증 (.env/환경변수 기반) ✅
+│  ├─ registry.py         # 리포 등록/관리 (파일 기반) ✅
+│  ├─ github_client.py    # REST API, rate limit, 페이징, 재시도 ✅
+│  ├─ collector.py        # 증분 수집 파이프라인 ✅
+│  ├─ state.py            # 파일 기반 상태 저장 ✅
+│  └─ logging.py          # 구조적 로깅, 민감정보 마스킹 ✅
 # (아래 모듈/파일들은 향후 버전에서 추가 예정)
-# │  ├─ registry.py         # 리포 등록/관리
-# │  ├─ github_client.py    # REST/GraphQL, rate limit, ETag
-# │  ├─ collector.py        # 증분 수집 파이프라인
 # │  ├─ rules.py            # 규칙 DSL/매칭
 # │  ├─ digest.py           # KPI/섹션 집계
 # │  ├─ renderer.py         # 템플릿 렌더링(HTML/JSON)
 # │  ├─ publisher.py        # gh-pages 배포
-# │  ├─ notifier.py         # 이메일 발송
-# │  ├─ state.py            # 파일/SQLite 상태 저장
-# │  └─ logging.py          # 구조적 로깅/메트릭
+# │  └─ notifier.py         # 이메일 발송
 └─ templates/
   ├─ base.html
   └─ digest.html

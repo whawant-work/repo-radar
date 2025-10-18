@@ -3,6 +3,8 @@
 Exposes public API for configuration loading.
 """
 
+__version__ = "0.1.0"
+
 from .config import (
     Config,
     EmailConfig,
@@ -16,6 +18,7 @@ from .github_client import GitHubAPIError, GitHubClient
 from .logging import SecretFilter, mask_secrets, setup_logging
 
 __all__ = [
+    "__version__",
     "Config",
     "EmailConfig",
     "GhPagesConfig",
