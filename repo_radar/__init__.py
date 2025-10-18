@@ -16,6 +16,7 @@ from .config import (
 )
 from .github_client import GitHubAPIError, GitHubClient
 from .logging import SecretFilter, mask_secrets, setup_logging
+from .digest import build_digest
 
 __all__ = [
     "__version__",
@@ -31,4 +32,5 @@ __all__ = [
     "setup_logging",
     "SecretFilter",
     "mask_secrets",
+    "build_digest",
 ]

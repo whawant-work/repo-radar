@@ -14,6 +14,7 @@ from repo_radar.logging import setup_logging
 from repo_radar.me_resolver import resolve_me
 from repo_radar.registry import RepoRegistryError, load_repos, validate_repos
 from repo_radar.rules import RuleConfig, RuleEngine
+from repo_radar.digest import build_digest
 
 logger = logging.getLogger(__name__)
 
@@ -130,24 +131,11 @@ def cmd_run(args: argparse.Namespace) -> int:
     engine = RuleEngine(RuleConfig(me=me, due_soon_within_days=cfg.due_soon_within_days))
     buckets = engine.classify(items)
 
-    # For now, output a minimal JSON preview to stdout
-    summary = {
-        k: [
-            {
-                "id": it.get("id"),
-                "type": it.get("type"),
-                "repo": it.get("repo"),
-                "number": it.get("number"),
-                "title": it.get("title"),
-                "priority": it.get("priority"),
-            }
-            for it in v
-        ]
-        for k, v in buckets.items()
-    }
-    print(json.dumps(summary, indent=2, ensure_ascii=False))
+    # Build digest (KPIs + sections)
+    digest = build_digest(buckets)
+    print(json.dumps(digest, indent=2, ensure_ascii=False))
 
-    print("\nℹ️ Render/Publish/Notify steps are not yet implemented.")
+    print("\nℹ️ Publish/Notify steps are not yet implemented.")
     return 0
 
 
