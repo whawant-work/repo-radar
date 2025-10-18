@@ -80,7 +80,14 @@ def test_error_raises_github_api_error(monkeypatch: pytest.MonkeyPatch) -> None:
 def test_iter_json_list_paginates_with_link(monkeypatch: pytest.MonkeyPatch) -> None:
     calls: list[str] = []
 
-    def fake_request(method: str, url: str, headers: dict[str, str], params: dict[str, Any] | None, json: dict[str, Any] | None, timeout: int) -> DummyResp:  # type: ignore[override]
+    def fake_request(
+        method: str,
+        url: str,
+        headers: dict[str, str],
+        params: dict[str, Any] | None,
+        json: dict[str, Any] | None,
+        timeout: int,
+    ) -> DummyResp:  # type: ignore[override]
         calls.append(url)
         if "page=1" in url:
             return DummyResp(
@@ -92,10 +99,14 @@ def test_iter_json_list_paginates_with_link(monkeypatch: pytest.MonkeyPatch) -> 
                 },
             )
         if "page=2" in url:
-            return DummyResp(200, json_data=[{"id": 3}], headers={"Content-Type": "application/json"})
+            return DummyResp(
+                200, json_data=[{"id": 3}], headers={"Content-Type": "application/json"}
+            )
         # absolute next URL path
         if url.endswith("/foo") and "page=2" not in url:
-            return DummyResp(200, json_data=[{"id": 3}], headers={"Content-Type": "application/json"})
+            return DummyResp(
+                200, json_data=[{"id": 3}], headers={"Content-Type": "application/json"}
+            )
         return DummyResp(404, json_data={"message": "not found"})
 
     import repo_radar.github_client as mod
@@ -115,7 +126,14 @@ def test_request_retries_on_5xx(monkeypatch: pytest.MonkeyPatch) -> None:
     def fake_sleep(sec: float) -> None:  # no-op to speed tests
         return None
 
-    def fake_request(method: str, url: str, headers: dict[str, str], params: dict[str, Any] | None, json: dict[str, Any] | None, timeout: int) -> DummyResp:  # type: ignore[override]
+    def fake_request(
+        method: str,
+        url: str,
+        headers: dict[str, str],
+        params: dict[str, Any] | None,
+        json: dict[str, Any] | None,
+        timeout: int,
+    ) -> DummyResp:  # type: ignore[override]
         attempts.append(1)
         code = sequence.pop(0)
         return DummyResp(code, json_data={"ok": True})
@@ -132,7 +150,7 @@ def test_request_retries_on_5xx(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 def test_request_retry_network_error_then_success(monkeypatch: pytest.MonkeyPatch) -> None:
-    class NetErr(Exception):
+    class NetError(Exception):
         pass
 
     attempts = {"n": 0}
@@ -140,7 +158,14 @@ def test_request_retry_network_error_then_success(monkeypatch: pytest.MonkeyPatc
     def fake_sleep(sec: float) -> None:
         return None
 
-    def fake_request(method: str, url: str, headers: dict[str, str], params: dict[str, Any] | None, json: dict[str, Any] | None, timeout: int):  # type: ignore[override]
+    def fake_request(
+        method: str,
+        url: str,
+        headers: dict[str, str],
+        params: dict[str, Any] | None,
+        json: dict[str, Any] | None,
+        timeout: int,
+    ):
         attempts["n"] += 1
         if attempts["n"] == 1:
             raise mod.requests.RequestException("boom")
@@ -160,7 +185,14 @@ def test_request_retry_exceeds_then_raises(monkeypatch: pytest.MonkeyPatch) -> N
     def fake_sleep(sec: float) -> None:
         return None
 
-    def fake_request(method: str, url: str, headers: dict[str, str], params: dict[str, Any] | None, json: dict[str, Any] | None, timeout: int):  # type: ignore[override]
+    def fake_request(
+        method: str,
+        url: str,
+        headers: dict[str, str],
+        params: dict[str, Any] | None,
+        json: dict[str, Any] | None,
+        timeout: int,
+    ):
         raise mod.requests.RequestException("no network")
 
     import repo_radar.github_client as mod

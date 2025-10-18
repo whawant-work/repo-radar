@@ -2,13 +2,13 @@ from __future__ import annotations
 
 import json
 import logging
-from collections.abc import Mapping, Iterator
+import re
+import time
+from collections.abc import Iterator, Mapping
 from typing import Any
 
 import requests
 from requests import Response
-import time
-import re
 
 
 class GitHubAPIError(RuntimeError):
@@ -171,7 +171,6 @@ class GitHubClient:
         self._log.info("GitHub %s %s (auth=%s)", method, url, masked_auth or "<none>")
 
         attempt = 0
-        last_exc: Exception | None = None
         while True:
             attempt += 1
             try:
@@ -202,9 +201,10 @@ class GitHubClient:
 
                 return resp
             except requests.RequestException as exc:  # network-level
-                last_exc = exc
                 if attempt < self._max_retries:
-                    delay = self._backoff_schedule[min(attempt - 1, len(self._backoff_schedule) - 1)]
+                    delay = self._backoff_schedule[
+                        min(attempt - 1, len(self._backoff_schedule) - 1)
+                    ]
                     self._log.warning(
                         "GitHub %s %s network error: %s, retrying in %.1fs (attempt %d/%d)",
                         method,
@@ -280,7 +280,7 @@ class GitHubClient:
                 try:
                     data = resp.json()
                 except Exception as exc:  # pragma: no cover - safety
-                    raise GitHubAPIError(resp.status_code, f"invalid JSON: {exc}")
+                    raise GitHubAPIError(resp.status_code, f"invalid JSON: {exc}") from exc
 
             # Success check
             if not (200 <= resp.status_code < 300):
@@ -304,8 +304,7 @@ class GitHubClient:
                 # Not a list response
                 raise GitHubAPIError(500, "expected a JSON list or an object with 'items'")
 
-            for it in items:
-                yield it
+            yield from items
 
             # Check for next link
             next_url = self._parse_link_next(resp.headers.get("Link"))
