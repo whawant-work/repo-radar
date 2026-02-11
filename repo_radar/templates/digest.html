@@ -2,6 +2,42 @@
 
 {% block title %}repo-radar Daily Digest{% endblock %}
 
+{# Macro for rendering a single item #}
+{% macro render_item(item) %}
+<li class="item">
+    <div class="item-header">
+        <span class="item-type {% if item.type|lower == 'issue' %}issue{% endif %}">
+            {{ item.type }}
+        </span>
+        <span class="item-repo">{{ item.repo }}</span>
+        <span class="item-number">#{{ item.number }}</span>
+        {% if item.priority >= 50 %}
+        <span class="priority-badge priority-high">High Priority</span>
+        {% elif item.priority >= 30 %}
+        <span class="priority-badge priority-medium">Medium</span>
+        {% elif item.priority > 0 %}
+        <span class="priority-badge priority-low">Low</span>
+        {% endif %}
+    </div>
+    <div class="item-title">
+        <a href="https://github.com/{{ item.repo }}/{% if item.type|lower == 'pr' %}pull{% else %}issues{% endif %}/{{ item.number }}" 
+           target="_blank" 
+           rel="noopener noreferrer">
+            {{ item.title }}
+        </a>
+    </div>
+    {% if item.labels %}
+    <div class="item-meta">
+        <div class="labels">
+            {% for label in item.labels %}
+            <span class="label">{{ label }}</span>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</li>
+{% endmacro %}
+
 {% block content %}
 <header>
     <h1>📡 repo-radar Daily Digest</h1>
@@ -30,38 +66,7 @@
         {% if sections.review %}
             <ul class="item-list">
                 {% for item in sections.review %}
-                <li class="item">
-                    <div class="item-header">
-                        <span class="item-type {% if item.type|lower == 'issue' %}issue{% endif %}">
-                            {{ item.type }}
-                        </span>
-                        <span class="item-repo">{{ item.repo }}</span>
-                        <span class="item-number">#{{ item.number }}</span>
-                        {% if item.priority >= 50 %}
-                        <span class="priority-badge priority-high">High Priority</span>
-                        {% elif item.priority >= 30 %}
-                        <span class="priority-badge priority-medium">Medium</span>
-                        {% elif item.priority > 0 %}
-                        <span class="priority-badge priority-low">Low</span>
-                        {% endif %}
-                    </div>
-                    <div class="item-title">
-                        <a href="https://github.com/{{ item.repo }}/{% if item.type|lower == 'pr' %}pull{% else %}issues{% endif %}/{{ item.number }}" 
-                           target="_blank" 
-                           rel="noopener noreferrer">
-                            {{ item.title }}
-                        </a>
-                    </div>
-                    {% if item.labels %}
-                    <div class="item-meta">
-                        <div class="labels">
-                            {% for label in item.labels %}
-                            <span class="label">{{ label }}</span>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    {% endif %}
-                </li>
+                {{ render_item(item) }}
                 {% endfor %}
             </ul>
         {% else %}
@@ -75,38 +80,7 @@
         {% if sections.reply %}
             <ul class="item-list">
                 {% for item in sections.reply %}
-                <li class="item">
-                    <div class="item-header">
-                        <span class="item-type {% if item.type|lower == 'issue' %}issue{% endif %}">
-                            {{ item.type }}
-                        </span>
-                        <span class="item-repo">{{ item.repo }}</span>
-                        <span class="item-number">#{{ item.number }}</span>
-                        {% if item.priority >= 50 %}
-                        <span class="priority-badge priority-high">High Priority</span>
-                        {% elif item.priority >= 30 %}
-                        <span class="priority-badge priority-medium">Medium</span>
-                        {% elif item.priority > 0 %}
-                        <span class="priority-badge priority-low">Low</span>
-                        {% endif %}
-                    </div>
-                    <div class="item-title">
-                        <a href="https://github.com/{{ item.repo }}/{% if item.type|lower == 'pr' %}pull{% else %}issues{% endif %}/{{ item.number }}" 
-                           target="_blank" 
-                           rel="noopener noreferrer">
-                            {{ item.title }}
-                        </a>
-                    </div>
-                    {% if item.labels %}
-                    <div class="item-meta">
-                        <div class="labels">
-                            {% for label in item.labels %}
-                            <span class="label">{{ label }}</span>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    {% endif %}
-                </li>
+                {{ render_item(item) }}
                 {% endfor %}
             </ul>
         {% else %}
@@ -120,38 +94,7 @@
         {% if sections.develop %}
             <ul class="item-list">
                 {% for item in sections.develop %}
-                <li class="item">
-                    <div class="item-header">
-                        <span class="item-type {% if item.type|lower == 'issue' %}issue{% endif %}">
-                            {{ item.type }}
-                        </span>
-                        <span class="item-repo">{{ item.repo }}</span>
-                        <span class="item-number">#{{ item.number }}</span>
-                        {% if item.priority >= 50 %}
-                        <span class="priority-badge priority-high">High Priority</span>
-                        {% elif item.priority >= 30 %}
-                        <span class="priority-badge priority-medium">Medium</span>
-                        {% elif item.priority > 0 %}
-                        <span class="priority-badge priority-low">Low</span>
-                        {% endif %}
-                    </div>
-                    <div class="item-title">
-                        <a href="https://github.com/{{ item.repo }}/{% if item.type|lower == 'pr' %}pull{% else %}issues{% endif %}/{{ item.number }}" 
-                           target="_blank" 
-                           rel="noopener noreferrer">
-                            {{ item.title }}
-                        </a>
-                    </div>
-                    {% if item.labels %}
-                    <div class="item-meta">
-                        <div class="labels">
-                            {% for label in item.labels %}
-                            <span class="label">{{ label }}</span>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    {% endif %}
-                </li>
+                {{ render_item(item) }}
                 {% endfor %}
             </ul>
         {% else %}
