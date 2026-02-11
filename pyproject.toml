@@ -11,6 +11,9 @@ dependencies = [
     "python-dotenv>=1.0.0",
 ]
 
+[tool.setuptools]
+packages = ["repo_radar"]
+
 [dependency-groups]
 dev = [
     "ruff==0.8.0",

@@ -14,6 +14,7 @@ from repo_radar.github_client import GitHubAPIError, GitHubClient
 from repo_radar.logging import setup_logging
 from repo_radar.me_resolver import resolve_me
 from repo_radar.registry import RepoRegistryError, load_repos, validate_repos
+from repo_radar.renderer import Renderer
 from repo_radar.rules import RuleConfig, RuleEngine
 
 logger = logging.getLogger(__name__)
@@ -133,7 +134,28 @@ def cmd_run(args: argparse.Namespace) -> int:
 
     # Build digest (KPIs + sections)
     digest = build_digest(buckets)
-    print(json.dumps(digest, indent=2, ensure_ascii=False))
+
+    # Render to HTML/JSON
+    renderer = Renderer()
+    try:
+        html_path, json_path = renderer.save_both(digest, output_dir=args.output)
+        logger.info(f"HTML saved to: {html_path}")
+        logger.info(f"JSON saved to: {json_path}")
+        print("\n✅ Digest generated successfully!")
+        print(f"📄 HTML: {html_path}")
+        print(f"📊 JSON: {json_path}")
+    except Exception as exc:
+        logger.error(f"Failed to render digest: {exc}")
+        print(f"\n❌ Rendering failed: {exc}")
+        return 3
+
+    # Show summary in console
+    print("\n📊 Summary:")
+    print(f"  • Waiting for review: {digest['kpis']['waiting_pr_count']} PRs")
+    print(f"  • Average waiting days: {digest['kpis']['avg_waiting_days']}")
+    print(f"  • Review items: {len(digest['sections']['review'])}")
+    print(f"  • Reply items: {len(digest['sections']['reply'])}")
+    print(f"  • Develop items: {len(digest['sections']['develop'])}")
 
     print("\nℹ️ Publish/Notify steps are not yet implemented.")
     return 0
