@@ -39,13 +39,16 @@ export GITHUB_TOKEN=your_github_token
 ### 2. 실행하기
 ```bash
 # 현재 설정 확인 및 저장소 목록 검증
-uv run python main.py
+uv run python main.py config
 
 # GitHub API 연결 확인 (토큰이 설정되어 있다면 private 저장소도 확인됩니다)
-uv run python main.py --check-github octocat/Hello-World
+uv run python main.py config --check-github octocat/Hello-World
 
-# 다이제스트 생성 (향후 지원 예정)
-# uv run python main.py --generate
+# 다이제스트 생성 (HTML/JSON 출력)
+uv run python main.py run
+
+# 출력 디렉토리 지정
+uv run python main.py run --output ./my-digests
 ```
 
 ### 3. 저장소 목록 파일로 관리하기 (권장)
@@ -65,6 +68,42 @@ cp config/repos.sample.list config/repos.list
 프로그램 통합은 추후 CLI 서브커맨드로 제공될 예정입니다. 현재는 `repo_radar.registry` 모듈의 `load_repos`, `validate_repos` 함수와 GitHub REST 클라이언트(`repo_radar.github_client.GitHubClient`)를 직접 사용할 수 있습니다.
 
 > 참고: `config/repos.list`는 개인 환경에 따라 달라지는 사용자 관리 파일이므로 git에 커밋되지 않도록 `.gitignore`에 포함되어 있습니다. 저장소에는 샘플(`config/repos.sample.list`)만 포함됩니다.
+
+### 4. 다이제스트 확인하기
+
+다이제스트를 생성하면 날짜별로 구조화된 출력이 생성됩니다:
+
+```bash
+uv run python main.py run
+```
+
+**출력 위치:**
+```
+output/
+└── 2026-02-11/          # UTC 날짜 기준
+    ├── index.html       # HTML 다이제스트 (브라우저로 열람)
+    └── digest.json      # JSON 형식 (프로그램 연동용)
+```
+
+**HTML 다이제스트 열람:**
+```bash
+# 브라우저에서 열기 (macOS)
+open output/2026-02-11/index.html
+
+# 브라우저에서 열기 (Linux)
+xdg-open output/2026-02-11/index.html
+
+# 또는 직접 파일 경로를 브라우저에 입력
+# file:///path/to/repo-radar/output/2026-02-11/index.html
+```
+
+**주요 섹션:**
+- 📊 **KPIs**: 대기 중인 PR 수, 평균 대기 일수
+- 👀 **Review Needed**: 리뷰가 필요한 PR/Issue
+- 💬 **Reply Needed**: 답변이 필요한 PR/Issue
+- 🔨 **In Development**: 개발 진행 중인 PR/Issue
+
+> 💡 HTML은 접근성(a11y) 및 반응형 디자인을 고려하여 제작되었으며, 다크 모드를 자동으로 지원합니다.
 
 ## ⚙️ 상세 설정
 
@@ -203,16 +242,17 @@ repo-radar는 **Python 3.12+**를 기반으로 하며, 표준 라이브러리를
 - GitHub REST API 클라이언트 (인증, 페이징, 재시도)
 - 저장소 레지스트리 (파일 기반 관리)
 - PR/Issue 수집기 (증분 수집, 상태 관리)
+- 규칙 기반 분류 엔진 (리뷰/답변/개발 자동 분류)
+- 다이제스트 빌더 (KPIs 계산 및 섹션 구성)
+- HTML/JSON 렌더러 (Jinja2 기반, 접근성 및 반응형 디자인)
 - 구조적 로깅 시스템 (민감정보 자동 마스킹)
-- CLI 도구 (설정 확인, API 연결 테스트)
-- 유닛 테스트 (33개, 100% 통과)
+- CLI 도구 (설정 확인, API 연결 테스트, 다이제스트 생성)
+- 유닛 테스트 (56개, 100% 통과)
 
 **🚧 향후 구현 예정:**
-- 규칙 기반 분류 엔진 (리뷰/답변/개발)
-- HTML 다이제스트 생성기
 - SMTP 이메일 발송
-- 스케줄러 (크론/GitHub Actions)
 - GitHub Pages 자동 배포
+- 스케줄러 (크론/GitHub Actions)
 
 > 📅 전체 로드맵과 마일스톤 계획은 [요구사항 문서](docs/requirements.md#14-마일스톤)를 참고하세요.
 
